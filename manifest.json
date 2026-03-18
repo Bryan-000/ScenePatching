@@ -1,6 +1,6 @@
 {
   "name": "ScenePatching",
-  "version_number": "1.0.0",
+  "version_number": "1.0.1",
   "website_url": "https://github.com/Bryan-000/ScenePatching",
   "description": "A super simple library that allows you to extremely simply edit scenes and such via your mods, made for ULTRAKILL.",
   "dependencies": [ "BepInEx-BepInExPack-5.4.2305" ]
