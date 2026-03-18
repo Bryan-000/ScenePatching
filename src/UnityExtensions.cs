@@ -13,7 +13,7 @@ public static class UnityExtensions
         public GameObject parent =>
             comp.transform.parent?.gameObject;
 
-        /// <summary> Get's the RectTransform of the gameObject of a component. </summary>
+        /// <summary> Gets the RectTransform of the gameObject of a component. </summary>
         public RectTransform rectTransform =>
             comp.GetComponent<RectTransform>();
 
@@ -36,7 +36,7 @@ public static class UnityExtensions
 
     extension(GameObject obj)
     {
-        /// <summary> Get's the RectTransform of the gameObject. </summary>
+        /// <summary> Gets the RectTransform of the gameObject. </summary>
         public RectTransform rectTransform =>
             obj.GetComponent<RectTransform>();
 
