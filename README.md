@@ -12,13 +12,13 @@ Make a new <b>static class/method</b> and add the `[ScenePatch]` attribute to it
 In the class make a new method with `[ScenePatch("TARGET_SCENE")]` and set target to the desired scene (Level 1-4, CreditsMuseum2, uk_construct, Endless, etc)
 
 Example:\
-![whar...](https://raw.githubusercontent.com/Bryan-000/ScenePatching/refs/heads/main/gitassets/example1.png "meow :3")
+![whar...](https://github.com/Bryan-000/ScenePatching/blob/a1edfe3c035f9a6cf4e3ecb91e418d104b444a1c/gitassets/example1.png "meow :3")
 
 ### TargetObjects
 The `[ScenePatch]` attribute also has a targetObject's parameter,
 using this u can add a `GameObject` or any other component(Transform, Door, Light, etc) parameter(s) to your method and the GameObject/a component off of the GameObject will be passed along.\
-![uh oh](https://raw.githubusercontent.com/Bryan-000/ScenePatching/refs/heads/main/gitassets/example2.png "haiiiiii :3")
-![why are u no work](https://raw.githubusercontent.com/Bryan-000/ScenePatching/refs/heads/main/gitassets/example3.png "uwu")\
+![uh oh](https://github.com/Bryan-000/ScenePatching/blob/a1edfe3c035f9a6cf4e3ecb91e418d104b444a1c/gitassets/example2.png "haiiiiii :3")
+![why are u no work](https://github.com/Bryan-000/ScenePatching/blob/a1edfe3c035f9a6cf4e3ecb91e418d104b444a1c/gitassets/example3.png "uwu")\
 You can also add multiple targetObject's and itll run the patch on all of them :3
 
 #### UnityExtensions
