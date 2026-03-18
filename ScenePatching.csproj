@@ -2,14 +2,20 @@
 	<Import Project="Paths.props" />
 	
 	<PropertyGroup>
-		<AssemblyName>ScenePatching</AssemblyName>
 		<Version>1.0.0</Version>
+		<Authors>Bryan_-000-</Authors>
+		<AssemblyName>ScenePatching</AssemblyName>
+		<PackageId>Fredayddd321ewq.ScenePatching</PackageId>
+		<RepositoryUrl>https://github.com/Bryan-000/ScenePatching</RepositoryUrl>
+		<Description>A super simple library that allows you to extremely simply edit scenes and such via your mods, made for ULTRAKILL.</Description>
 
 		<TargetFramework>netstandard2.1</TargetFramework>
 		<LangVersion>14</LangVersion>
 		<DebugType>embedded</DebugType>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<NoWarn>IDE0130, IDE0251, IDE0062</NoWarn>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
 		<!-- Resources so nuget can fucking find BepInEx and Unity. -->
 		<RestoreAdditionalProjectSources>
@@ -19,9 +25,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<!-- Nuget Packages -->
+		<!-- Nuget Stuff -->
 		<PackageReference Include="BepInEx.Core" Version="5.4.21" />
 		<PackageReference Include="UnityEngine.Modules" Version="2022.3.29" IncludeAssets="compile" />
+		<None Include="README.md" Pack="true" PackagePath="\"/>
 
 		<!-- Assemblies via Managed -->
 		<Reference Include="Assembly-CSharp">
