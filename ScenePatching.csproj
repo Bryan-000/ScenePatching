@@ -17,6 +17,7 @@
 		<NoWarn>IDE0130, IDE0251, IDE0062</NoWarn>
 		<PackageIcon>baby icon ꓽ3.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>ultrakill, modding, unity, patching, scenes, scenepatching</PackageTags>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
 		<!-- Resources so nuget can fucking find BepInEx and Unity. -->
