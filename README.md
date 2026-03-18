@@ -1,5 +1,6 @@
 ﻿# ScenePatching
-A super simple library that allows you to extremely simply edit scenes and such via your mods, made for [ULTRAKILL](https://store.steampowered.com/app/1229490/ULTRAKILL/).
+A super simple **library** that allows you to extremely simply edit scenes and such via your mods, made for [ULTRAKILL](https://store.steampowered.com/app/1229490/ULTRAKILL/).\
+This is **A LIBRARY** it does not do anything by itself.
 
 # How to use the library
 ### -- IMPORTANT --
@@ -14,12 +15,14 @@ In the class make a new method with ```[ScenePatch("TARGET_SCENE")]``` and set t
 Example:\
 ![whar...](https://raw.githubusercontent.com/Bryan-000/ScenePatching/refs/heads/master/gitassets/example1.png "meow :3")
 
+this will be ran on scene load, you can find objects and blah blah with the ```GameObject.FindObject``` extension or...
+
 ### TargetObjects
 The `[ScenePatch]` attribute also has a targetObject's parameter,
 using this u can add a ```GameObject``` or any other component(Transform, Door, Light, etc) parameter(s) to your method and the GameObject/a component off of the GameObject will be passed along.\
 ![uh oh](https://raw.githubusercontent.com/Bryan-000/ScenePatching/refs/heads/master/gitassets/example2.png "haiiiiii :3")
 ![why are u no work](https://raw.githubusercontent.com/Bryan-000/ScenePatching/refs/heads/master/gitassets/example3.png "uwu")\
-You can also add multiple targetObject's and itll run the patch on all of them :3
+You can also add multiple targetObject's and itll run the patch multiple times for all of them :3
 
 #### UnityExtensions
 oki so this isnt like the main part of the library but its coolio to me so :3\
