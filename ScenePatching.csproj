@@ -6,6 +6,7 @@
 		<Authors>Bryan_-000-</Authors>
 		<AssemblyName>ScenePatching</AssemblyName>
 		<PackageId>Fredayddd321ewq.ScenePatching</PackageId>
+		<PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
 		<RepositoryUrl>https://github.com/Bryan-000/ScenePatching</RepositoryUrl>
 		<Description>A super simple library that allows you to extremely simply edit scenes and such via your mods, made for ULTRAKILL.</Description>
 
@@ -14,6 +15,7 @@
 		<DebugType>embedded</DebugType>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<NoWarn>IDE0130, IDE0251, IDE0062</NoWarn>
+		<PackageIcon>baby icon ꓽ3.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
@@ -29,6 +31,7 @@
 		<PackageReference Include="BepInEx.Core" Version="5.4.21" />
 		<PackageReference Include="UnityEngine.Modules" Version="2022.3.29" IncludeAssets="compile" />
 		<None Include="README.md" Pack="true" PackagePath="\"/>
+		<None Include="baby icon ꓽ3.png" Pack="true" PackagePath="\"/>
 
 		<!-- Assemblies via Managed -->
 		<Reference Include="Assembly-CSharp">
