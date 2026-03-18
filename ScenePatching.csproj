@@ -14,7 +14,7 @@
 		<LangVersion>14</LangVersion>
 		<DebugType>embedded</DebugType>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<NoWarn>IDE0130, IDE0251, IDE0062</NoWarn>
+		<NoWarn>IDE0130, IDE0251, IDE0062, IDE1006</NoWarn>
 		<PackageIcon>baby icon ꓽ3.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>ultrakill, modding, unity, patching, scenes, scenepatching</PackageTags>

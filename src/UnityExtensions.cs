@@ -104,14 +104,12 @@ public static class UnityExtensions
         public static T Create<T>(string name) where T : Component =>
             new GameObject(name).AddComponent<T>();
 
-        /// <summary> Creates a GameObject with the specified component and parent. </summary>
+        /// <summary> Creates a GameObject with the specified thingamajigs :3 </summary>
         public static T Create<T>(string name, Transform parent, bool active = true) where T : Component
         {
             GameObject gameObject = new(name);
-            if (!active) gameObject.SetActive(false);
-            gameObject.transform.SetParent(parent);
-            gameObject.transform.localPosition = Vector3.zero;
-            gameObject.transform.localScale = Vector3.one;
+            gameObject.SetActive(active);
+            gameObject.transform.parent = parent;
 
             return gameObject.AddComponent<T>();
         }
