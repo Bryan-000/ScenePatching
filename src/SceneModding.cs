@@ -20,24 +20,41 @@ public static class SceneModding
     /// <summary> BepInEx logger for like logging yknow :P </summary>
     private static ManualLogSource Log;
 
-    /// <summary> Loads the scene handler. </summary>
-    internal static void Load()
+    /// <summary> same as <see cref="PatchAll(Assembly)"/> but like just this type instead of the entire assembly :3 </summary>
+    public static void PatchAll(Type type)
     {
-        Log = BepLogger.CreateLogSource("SceneModding");
-        SceneManager.sceneLoaded += (scene, _) =>
+        List<ScenePatchAttribute> patches = [.. type.GetCustomAttributes<ScenePatchAttribute>()];
+        foreach (MethodInfo meth in AccessTools.GetDeclaredMethods(type))
         {
-            if (ScenePatches.TryGetValue(SceneHelper.CurrentScene, out List<ScenePatchAttribute> scenePatches))
-                foreach (ScenePatchAttribute patch in scenePatches) 
-                    try
-                    {
-                        foreach (string targetObj in patch.TargetObjects)
-                            ExecutePatch(patch, scene, GameObject.FindObject(targetObj, scene));
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.LogError($"Exception while running patch({patch.patcherMethod.DeclaringType.FullName}:: {patch.patcherMethod.Name}): {ex.Message}\n{ex.StackTrace}");
-                    }
-        };
+            try
+            {
+                List<ScenePatchAttribute> methodpatches = [.. meth.GetCustomAttributes<ScenePatchAttribute>()];
+                if (!methodpatches.Any())
+                    continue;
+
+                ScenePatchAttribute patch = ScenePatchAttribute.Merge(methodpatches.Concat(patches));
+                patch.patcherMethod ??= meth;
+
+                if (ScenePatches.TryGetValue(patch.TargetSceneName, out List<ScenePatchAttribute> allPatchesOfTarget))
+                    allPatchesOfTarget.Add(patch);
+                else
+                    ScenePatches.Add(patch.TargetSceneName, patch);
+            }
+            catch
+            {
+                Log.LogError($"Failed to register patch {type.Name}.{meth.Name}()");
+            }
+        }
+    }
+
+    /// <summary> Searches the provided or current assembly for any <see cref="ScenePatchAttribute"/>'s and uses them to register new scene patches :3 </summary>
+    public static void PatchAll(Assembly asm = null)
+    {
+        asm ??= new StackTrace().GetFrame(1).GetMethod().ReflectedType.Assembly;
+
+        Log.LogMessage($"Scene patching {asm.GetName().Name}...");
+        foreach (Type type in AccessTools.GetTypesFromAssembly(asm))
+            PatchAll(type);
     }
 
     /// <summary> Execute's a ScenePatch, providing all the wanted parameters. </summary>
@@ -72,44 +89,23 @@ public static class SceneModding
         patch.patcherMethod.Invoke(patchClassInstance, [.. parameters]);
     }
 
-    /// <summary> same as <see cref="PatchAll(Assembly)"/> but like with type if u want :3 </summary>
-    public static void PatchAll(Type type) =>
-        PatchAll(type.Assembly);
-
-    /// <summary> Patch all the scene patches in the provided assembly (if u dont provide an assembly then itll just try to find it :3) </summary>
-    public static void PatchAll(Assembly asm = null)
+    /// <summary> Loads the scene handler. </summary>
+    internal static void Load()
     {
-        asm ??= new StackTrace().GetFrame(1).GetMethod().ReflectedType.Assembly;
-
-        Log.LogMessage($"Scene patching {asm.GetName().Name}...");
-        foreach (Type type in AccessTools.GetTypesFromAssembly(asm))
+        Log = BepLogger.CreateLogSource("SceneModding");
+        SceneManager.sceneLoaded += (scene, _) =>
         {
-            List<ScenePatchAttribute> patches = [.. type.GetCustomAttributes<ScenePatchAttribute>()];
-
-            if (!patches.Any())
-                continue;
-
-            AccessTools.GetDeclaredMethods(type).Do((meth) =>
-            {
-                try
-                {
-                    List<ScenePatchAttribute> methodpatches = [.. meth.GetCustomAttributes<ScenePatchAttribute>()];
-                    if (!methodpatches.Any())
-                        return;
-
-                    ScenePatchAttribute patch = ScenePatchAttribute.Merge(methodpatches.Concat(patches));
-                    patch.patcherMethod ??= meth;
-
-                    if (ScenePatches.TryGetValue(patch.TargetSceneName, out List<ScenePatchAttribute> allPatchesOfTarget))
-                        allPatchesOfTarget.Add(patch);
-                    else
-                        ScenePatches.Add(patch.TargetSceneName, patch);
-                }
-                catch
-                {
-                    Log.LogError($"Failed to register patch {type.Name}.{meth.Name}()");
-                }
-            });
-        }
+            if (ScenePatches.TryGetValue(SceneHelper.CurrentScene, out List<ScenePatchAttribute> scenePatches))
+                foreach (ScenePatchAttribute patch in scenePatches) 
+                    try
+                    {
+                        foreach (string targetObj in patch.TargetObjects)
+                            ExecutePatch(patch, scene, GameObject.FindObject(targetObj, scene));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.LogError($"Exception while running patch({patch.patcherMethod.DeclaringType.FullName}:: {patch.patcherMethod.Name}): {ex.Message}\n{ex.StackTrace}");
+                    }
+        };
     }
 }
