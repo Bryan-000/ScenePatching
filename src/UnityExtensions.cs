@@ -109,7 +109,7 @@ public static class UnityExtensions
         {
             GameObject gameObject = new(name);
             gameObject.SetActive(active);
-            gameObject.transform.parent = parent;
+            gameObject.transform.SetParent(parent, true);
 
             return gameObject.AddComponent<T>();
         }
