@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -20,6 +21,9 @@ public class ScenePatchAttribute(string target = null, params string[] targetObj
 
     /// <summary> creates a new scenepatch meow mrrrp miau maow miaow :3 ^&gt;w&lt;^ </summary>
     public ScenePatchAttribute(string[] targetObjects) : this(null, targetObjects) { }
+
+    /// <summary> Debugging stacktrace created when the attribute is made. </summary>
+    public StackTrace CreationTrace = new();
 
     /// <summary> Merges the scene patches into one :3 </summary>
     public static ScenePatchAttribute Merge(IEnumerable<ScenePatchAttribute> patches)

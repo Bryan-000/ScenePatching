@@ -7,6 +7,7 @@ using UnityEngine;
 [BepInPlugin(PluginInfo.GUID, PluginInfo.Name, PluginInfo.Version)]
 public class ScenePatchingPlugin : BaseUnityPlugin
 {
+    /// <summary> Literally just load the <see cref="SceneModding.Load"/> and sets DontSaveInEditor what else do i fucking say </summary>
     public void Awake()
     {
         gameObject.hideFlags = HideFlags.DontSaveInEditor;
