@@ -94,10 +94,34 @@ public static class UnityExtensions
                 Path = Path[(Path.IndexOf('/') + 1)..];
             }
 
-            var search = (scene ?? SceneManager.GetSceneAt(0)).GetRootGameObjects().FirstOrDefault(root => root.name == rootSearchObj);
-            return rootSearchObj != Path // if root isnt the same as path then that means at the start it contained a / and got changed aka its got a child
+            scene ??= SceneManager.GetActiveScene();
+            var search = scene.Value.GetRootGameObjects().FirstOrDefault(root => root.name == rootSearchObj);
+            return rootSearchObj != Path // if root isnt the same as path then that means at the start it contained a / and got changed aka we're searching for a child
                 ? search.Find(Path)
                 : search;
+        }
+
+        /// <summary> Finds a GameObject off of a path with extra formatting for getting an object by index. </summary>
+        /// <remarks> 
+        /// Throughout any piece of the path you can instead of putting the name of the object, put its index followed by "..." such as: 
+        /// <code>"BridgeRoom - 1/Non-Stuff/4.../Text"</code> 
+        /// the <c>"4.."</c> gets the 4th child of <c>"Non-Stuff"</c>
+        /// </remarks>
+        public static GameObject FindObjectAdvanced(string Path, Scene? scene = null)
+        {
+            scene ??= SceneManager.GetActiveScene();
+            string[] splitPath = Path.Split('/', '\\');
+            
+            GameObject[] rootObjs = scene?.GetRootGameObjects();
+            string target = splitPath[0];
+
+            GameObject targetObj = null;
+            if (target.EndsWith("...") && int.TryParse(target[..^2], out int objIndex))
+                targetObj = rootObjs[objIndex];
+            else
+                targetObj = rootObjs.FirstOrDefault(root => root.name == target);
+
+            return FindRecursive(splitPath, targetObj?.transform, 1)?.gameObject;
         }
 
         /// <summary> Creates a GameObject with the specified component. </summary>
@@ -113,5 +137,26 @@ public static class UnityExtensions
 
             return gameObject.AddComponent<T>();
         }
+    }
+
+    /// <summary> Recursively finds a child of a transform by path, with extra formatting for index aswell. </summary>
+    /// <remarks> Don't use this directly, use <see cref="FindObjectAdvanced(string, Scene?)"/> instead. </remarks>
+    private static Transform FindRecursive(string[] path, Transform current, int index)
+    {
+        // if index longer or equal to path.length, then we've already reached the end
+        if (index >= path.Length || !current) // also check for current cuz uhm... yea
+            return current;
+
+        Transform result = null;
+        string target = path[index];
+
+        // find child of current. if current target is an int with "..." on the end then search by index, else search by name
+        if (target.EndsWith("...") && int.TryParse(target[..^2], out int childIndex))
+            result = current.GetChild(childIndex);
+        else
+            result = current.Cast<Transform>().FirstOrDefault(child => child.name == target);
+
+        // if result is null just return current, which should be the last valid transform we found
+        return result ? FindRecursive(path, result, index + 1) : current;
     }
 }
