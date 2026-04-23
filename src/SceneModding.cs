@@ -16,7 +16,7 @@ using BepLogger = BepInEx.Logging.Logger;
 public static class SceneModding
 {
     /// <summary> Dictionary full of all the scene patches to run on scene load. </summary>
-    public static Dictionary<string, List<ScenePatchAttribute>> ScenePatches = [];
+    public static Dictionary<string, List<ScenePatch>> ScenePatches = [];
 
     /// <summary> BepInEx logger for like logging yknow :P </summary>
     private static ManualLogSource Log;
@@ -27,9 +27,9 @@ public static class SceneModding
         Log = BepLogger.CreateLogSource("SceneModding");
         SceneManager.sceneLoaded += (scene, _) =>
         {
-            if (ScenePatches.TryGetValue(SceneHelper.CurrentScene, out List<ScenePatchAttribute> scenePatches))
+            if (ScenePatches.TryGetValue(SceneHelper.CurrentScene, out List<ScenePatch> scenePatches))
             {
-                foreach (ScenePatchAttribute patch in scenePatches)
+                foreach (ScenePatch patch in scenePatches)
                 {
                     try
                     {
@@ -64,7 +64,7 @@ public static class SceneModding
     }
 
     /// <summary> Execute's a ScenePatch, providing all the wanted parameters. </summary>
-    public static void ExecutePatch(ScenePatchAttribute patch, Scene? scene = null, GameObject targetObj = null)
+    public static void ExecutePatch(ScenePatch patch, Scene? scene = null, GameObject targetObj = null)
     {
         targetObj ??= GameObject.FindObject(patch.TargetObjects.FirstOrDefault(), scene);
 
@@ -104,19 +104,19 @@ public static class SceneModding
     /// <summary> same as <see cref="PatchAll(Assembly)"/> but like just this type instead of the entire assembly :3 </summary>
     public static void PatchAll(Type type)
     {
-        List<ScenePatchAttribute> patches = [.. type.GetCustomAttributes<ScenePatchAttribute>()];
+        List<ScenePatch> patches = [.. type.GetCustomAttributes<ScenePatch>()];
         foreach (MethodInfo meth in AccessTools.GetDeclaredMethods(type))
         {
             try
             {
-                List<ScenePatchAttribute> methodpatches = [.. meth.GetCustomAttributes<ScenePatchAttribute>()];
+                List<ScenePatch> methodpatches = [.. meth.GetCustomAttributes<ScenePatch>()];
                 if (!methodpatches.Any())
                     continue;
 
-                ScenePatchAttribute patch = ScenePatchAttribute.Merge(methodpatches, patches);
+                ScenePatch patch = ScenePatch.Merge(methodpatches, patches);
                 patch.patcherMethod ??= meth;
 
-                if (ScenePatches.TryGetValue(patch.TargetSceneName, out List<ScenePatchAttribute> allPatchesOfTarget))
+                if (ScenePatches.TryGetValue(patch.TargetSceneName, out List<ScenePatch> allPatchesOfTarget))
                     allPatchesOfTarget.Add(patch);
                 else
                     ScenePatches.Add(patch.TargetSceneName, patch);
@@ -128,7 +128,7 @@ public static class SceneModding
         }
     }
 
-    /// <summary> Searches the provided or current assembly for any <see cref="ScenePatchAttribute"/>'s and uses them to register new scene patches :3 </summary>
+    /// <summary> Searches the provided or current assembly for any <see cref="ScenePatch"/>'s and uses them to register new scene patches :3 </summary>
     public static void PatchAll(Assembly asm = null)
     {
         asm ??= GetCallingAssembly();
@@ -142,17 +142,21 @@ public static class SceneModding
     public static void UnpatchAll(Assembly asm = null)
     {
         asm ??= GetCallingAssembly();
-
         Log.LogMessage($"Removing all scene patches from {asm.GetName().Name}...");
-        foreach (var patch in ScenePatches)
-            ScenePatches[patch.Key] = [.. patch.Value.Where(p => p.patcherMethod.ReflectedType.Assembly != asm)];
+
+        string[] scenes = [.. ScenePatches.Keys];
+        foreach (string scene in scenes)
+            ScenePatches[scene] = [.. ScenePatches[scene].Where(p => p.patcherMethod.ReflectedType.Assembly != asm)];
     }
 
     /// <summary> Unregisters all scene patches of this type. </summary>
     public static void UnpatchAll(Type type)
     {
-        foreach (var patch in ScenePatches)
-            ScenePatches[patch.Key] = [.. patch.Value.Where(p => p.patcherMethod.ReflectedType != type)];
+        Log.LogMessage($"Removing all scene patches from {type.FullName}...");
+
+        string[] scenes = [.. ScenePatches.Keys];
+        foreach (string scene in scenes)
+            ScenePatches[scene] = [.. ScenePatches[scene].Where(p => p.patcherMethod.ReflectedType != type)];
     }
 
     #endregion

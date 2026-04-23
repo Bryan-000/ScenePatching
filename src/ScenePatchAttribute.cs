@@ -9,7 +9,7 @@ using UnityEngine;
 
 /// <summary> Annotation to define targets of your ScenePatch methods </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
-public class ScenePatchAttribute(string target = null, params string[] targetObjects) : Attribute
+public class ScenePatch(string target = null, params string[] targetObjects) : Attribute
 {
     /// <summary> The name of the target scene. </summary>
     public string TargetSceneName = target;
@@ -21,24 +21,24 @@ public class ScenePatchAttribute(string target = null, params string[] targetObj
     public MethodInfo patcherMethod;
 
     /// <summary> creates a new scenepatch meow mrrrp miau maow miaow :3 &gt;ω&lt; </summary>
-    public ScenePatchAttribute(string[] targetObjects) : this(null, targetObjects) { }
+    public ScenePatch(string[] targetObjects) : this(null, targetObjects) { }
 
     /// <summary> Debugging stacktrace created when the attribute is made. </summary>
     public StackTrace CreationTrace = new();
 
     /// <summary> Merges the scene patcheses into one  </summary>
-    public static ScenePatchAttribute Merge(params IEnumerable<IEnumerable<ScenePatchAttribute>> patcheses)
+    public static ScenePatch Merge(params IEnumerable<IEnumerable<ScenePatch>> patcheses)
     {
-        IEnumerable<ScenePatchAttribute> concattedPatchesCuzSillylyyyyyUwU = patcheses.SelectMany(patches => patches);
+        IEnumerable<ScenePatch> concattedPatchesCuzSillylyyyyyUwU = patcheses.SelectMany(patches => patches);
 
         return Merge(concattedPatchesCuzSillylyyyyyUwU);
     }
 
     /// <summary> Merges the scene patches into one :3 </summary>
-    public static ScenePatchAttribute Merge(IEnumerable<ScenePatchAttribute> patches)
+    public static ScenePatch Merge(IEnumerable<ScenePatch> patches)
     {
-        ScenePatchAttribute result = new();
-        foreach (ScenePatchAttribute toMerge in patches)
+        ScenePatch result = new();
+        foreach (ScenePatch toMerge in patches)
         {
             result.TargetSceneName ??= toMerge.TargetSceneName;
             result.patcherMethod ??= toMerge.patcherMethod;
