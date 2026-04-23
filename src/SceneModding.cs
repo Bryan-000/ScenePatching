@@ -113,7 +113,7 @@ public static class SceneModding
                 if (!methodpatches.Any())
                     continue;
 
-                ScenePatchAttribute patch = ScenePatchAttribute.Merge(methodpatches.Concat(patches));
+                ScenePatchAttribute patch = ScenePatchAttribute.Merge(methodpatches, patches);
                 patch.patcherMethod ??= meth;
 
                 if (ScenePatches.TryGetValue(patch.TargetSceneName, out List<ScenePatchAttribute> allPatchesOfTarget))

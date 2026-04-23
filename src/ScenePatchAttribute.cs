@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using UnityEngine;
 
 /// <summary> Annotation to define targets of your ScenePatch methods </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true)]
@@ -19,11 +20,19 @@ public class ScenePatchAttribute(string target = null, params string[] targetObj
     /// <summary> The method to be ran when we actually load into the target scene. </summary>
     public MethodInfo patcherMethod;
 
-    /// <summary> creates a new scenepatch meow mrrrp miau maow miaow :3 ^&gt;w&lt;^ </summary>
+    /// <summary> creates a new scenepatch meow mrrrp miau maow miaow :3 &gt;ω&lt; </summary>
     public ScenePatchAttribute(string[] targetObjects) : this(null, targetObjects) { }
 
     /// <summary> Debugging stacktrace created when the attribute is made. </summary>
     public StackTrace CreationTrace = new();
+
+    /// <summary> Merges the scene patcheses into one  </summary>
+    public static ScenePatchAttribute Merge(params IEnumerable<IEnumerable<ScenePatchAttribute>> patcheses)
+    {
+        IEnumerable<ScenePatchAttribute> concattedPatchesCuzSillylyyyyyUwU = patcheses.SelectMany(patches => patches);
+
+        return Merge(concattedPatchesCuzSillylyyyyyUwU);
+    }
 
     /// <summary> Merges the scene patches into one :3 </summary>
     public static ScenePatchAttribute Merge(IEnumerable<ScenePatchAttribute> patches)
@@ -48,5 +57,6 @@ public class ScenePatchAttribute(string target = null, params string[] targetObj
     public override string ToString() =>
         $@"TargetScene: {TargetSceneName}
 TargetObjects: {string.Join(", ", targetObjects)}
-PatcherMethod: {patcherMethod.DeclaringType.FullName}.{patcherMethod.Name}({string.Join(", ", patcherMethod.GetParameters().Select(p => p.ParameterType.Name + " " + p.Name))});";
+PatcherMethod: {patcherMethod.DeclaringType.FullName}.{patcherMethod.Name}({string.Join(", ", patcherMethod.GetParameters().Select(p => p.ParameterType.Name + " " + p.Name))});
+CreationTrace: {StackTraceUtility.ExtractFormattedStackTrace(CreationTrace)}";
 }
