@@ -142,17 +142,21 @@ public static class SceneModding
     public static void UnpatchAll(Assembly asm = null)
     {
         asm ??= GetCallingAssembly();
-
         Log.LogMessage($"Removing all scene patches from {asm.GetName().Name}...");
-        foreach (var patch in ScenePatches)
-            ScenePatches[patch.Key] = [.. patch.Value.Where(p => p.patcherMethod.ReflectedType.Assembly != asm)];
+
+        string[] scenes = [.. ScenePatches.Keys];
+        foreach (string scene in scenes)
+            ScenePatches[scene] = [.. ScenePatches[scene].Where(p => p.patcherMethod.ReflectedType.Assembly != asm)];
     }
 
     /// <summary> Unregisters all scene patches of this type. </summary>
     public static void UnpatchAll(Type type)
     {
-        foreach (var patch in ScenePatches)
-            ScenePatches[patch.Key] = [.. patch.Value.Where(p => p.patcherMethod.ReflectedType != type)];
+        Log.LogMessage($"Removing all scene patches from {type.FullName}...");
+
+        string[] scenes = [.. ScenePatches.Keys];
+        foreach (string scene in scenes)
+            ScenePatches[scene] = [.. ScenePatches[scene].Where(p => p.patcherMethod.ReflectedType != type)];
     }
 
     #endregion
